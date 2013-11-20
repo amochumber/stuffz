@@ -1,6 +1,6 @@
 #! /bin/bash
 
-gitdir=/home/amo/mygit/
+gitdir=#put your git directory here
 repos=`find $gitdir -name *\.git | sed 's_'"$gitdir"'__' | cut -d\/ -f1`
 
 for repo in $repos;
