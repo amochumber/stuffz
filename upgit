@@ -1,8 +1,11 @@
 #! /bin/bash
 
-currentdir=`pwd`
 gitdir=/home/amo/mygit/
+repos=`find $gitdir -name *\.git | sed 's_'"$gitdir"'__' | cut -d\/ -f1`
 
-for i in `ls $gitdir`; do (echo "Updating $i"; cd $gitdir$i; git pull; echo "";); done
-
-cd $currentdir;
+for repo in $repos;
+	do echo "Updating $repo...";
+	pushd $gitdir$repo && git pull;
+	popd;
+	echo #make it easier to read
+done;
