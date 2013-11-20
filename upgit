@@ -1,0 +1,8 @@
+#! /bin/bash
+
+currentdir=`pwd`
+gitdir=/home/amo/mygit/
+
+for i in `ls $gitdir`; do (echo "Updating $i"; cd $gitdir$i; git pull; echo "";); done
+
+cd $currentdir;
