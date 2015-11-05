@@ -1,0 +1,21 @@
+# a record of the steps i nearly always run to get a Linux Mint install the way I like.
+
+# TODO - find a way to "boxen" this process.
+
+# install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock
+sudo apt-get install clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock
+
+#install latest git
+sudo add-apt-repository ppa:git-core/ppa && sudo apt-get install && sudo apt-get install git
+
+#install virtualbox 5
+echo “deb http://download.virtualbox.org/virtualbox/debian trusty contrib” >> /etc/apt/sources.list; wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add - && sudo apt-get update && sudo apt-get install virtualbox-5.0
+
+#install mongo shell
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && (echo “deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse” | sudo tee /etc/apt/sources.list.d/mongo.list) && sudo apt-get install mongodb-org-shell;
+
+#manual installs
+install atom <- from site
+install dropbox <- from site
+install google-chrome-stable <- from site
+install vagrant <- from site
