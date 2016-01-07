@@ -2,8 +2,8 @@
 
 # TODO - find a way to "boxen" this process.
 
-# install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock apt-file
-sudo apt-get install clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file
+# install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock apt-file at
+sudo apt-get install clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at
 
 #add additonal repos to sourcelists
 echo "deb https://download.01.org/gfx/ubuntu/14.04/main trusty main" | sudo tee /etc/apt/sources.list.d/intellinuxgraphics.list
