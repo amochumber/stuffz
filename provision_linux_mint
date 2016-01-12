@@ -2,6 +2,10 @@
 
 # TODO - find a way to "boxen" this process.
 
+# remove unwanted software
+sudo apt-get purge speech-dispatcher speech-dispatcher-audio-plugins gnome-screenshot tomboy gimp simple-scan firefox hexchat pidgin thunderbird transmission-gtk libreoffice-core totem banshee brasero vlc
+sudo apt-get autoremove
+
 # install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock apt-file at dos2unix
 sudo apt-get install clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at dos2unix
 
