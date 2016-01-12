@@ -3,18 +3,18 @@
 # TODO - find a way to "boxen" this process.
 
 # remove unwanted software
-sudo apt-get purge speech-dispatcher speech-dispatcher-audio-plugins gnome-screenshot tomboy gimp simple-scan firefox hexchat pidgin thunderbird transmission-gtk libreoffice-core totem banshee brasero vlc
-sudo apt-get autoremove
+sudo apt-get purge -y speech-dispatcher speech-dispatcher-audio-plugins gnome-screenshot tomboy gimp simple-scan firefox firefrox-locale-en hexchat pidgin thunderbird transmission-gtk libreoffice-core totem banshee brasero vlc
+sudo apt-get autoremove -y
 
 # install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock apt-file at dos2unix
-sudo apt-get install clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at dos2unix
+sudo apt-get install -y clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at dos2unix
 
 #add additonal repos to sourcelists
 echo "deb https://download.01.org/gfx/ubuntu/14.04/main trusty main" | sudo tee /etc/apt/sources.list.d/intellinuxgraphics.list
-echo “deb http://download.virtualbox.org/virtualbox/debian trusty contrib” | sudo tee /etc/apt/sources.list.d/virtualbox.list
-echo “deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse” | sudo tee /etc/apt/sources.list.d/mongodb.list
-wget https://repo.percona.com/apt/percona-release_0.1-3.trusty_all.deb -O /tmp/percona.deb && dpkg -i /tmp/percona.deb
-wget http://dev.mysql.com/get/mysql-apt-config_0.6.0-1_all.deb -O /tmp/mysql.deb && dpkg -i /tmp/mysql.deb
+echo "deb http://download.virtualbox.org/virtualbox/debian trusty contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb.list
+wget https://repo.percona.com/apt/percona-release_0.1-3.trusty_all.deb -O /tmp/percona.deb && sudo dpkg -i /tmp/percona.deb
+wget http://dev.mysql.com/get/mysql-apt-config_0.6.0-1_all.deb -O /tmp/mysql.deb && sudo dpkg -i /tmp/mysql.deb
 sudo add-apt-repository ppa:git-core/ppa
 sudo add-apt-repository ppa:kilian/f.lux
 
