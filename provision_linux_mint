@@ -12,6 +12,7 @@ echo “deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse
 wget https://repo.percona.com/apt/percona-release_0.1-3.trusty_all.deb -O /tmp/percona.deb && dpkg -i /tmp/percona.deb
 wget http://dev.mysql.com/get/mysql-apt-config_0.6.0-1_all.deb -O /tmp/mysql.deb && dpkg -i /tmp/mysql.deb
 sudo add-apt-repository ppa:git-core/ppa
+sudo add-apt-repository ppa:kilian/f.lux
 
 #add required apt-keys
 wget --no-check-certificate https://download.01.org/gfx/RPM-GPG-KEY-ilg -O- | sudo apt-key add -
@@ -22,7 +23,7 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 #update apt cache and install additional software (intel-drivers git virtualbox mongodbshell mysql-client)
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install git virtualbox-5.0 mongodb-org-shell mysql-community-client
+sudo apt-get install git virtualbox-5.0 mongodb-org-shell mysql-community-client fluxgui
 
 #manual installs
 install atom <- from site
