@@ -3,11 +3,8 @@
 # TODO - find a way to "boxen" this process.
 
 # remove unwanted software
-sudo apt-get purge -y speech-dispatcher speech-dispatcher-audio-plugins gnome-screenshot tomboy gimp simple-scan firefox firefrox-locale-en hexchat pidgin thunderbird transmission-gtk libreoffice-core totem banshee brasero vlc
+sudo apt-get purge -y speech-dispatcher speech-dispatcher-audio-plugins gnome-screenshot tomboy gimp simple-scan firefox firefox-locale-en hexchat pidgin thunderbird transmission-gtk libreoffice-core totem banshee brasero vlc gimp-help-common
 sudo apt-get autoremove -y
-
-# install cssh curl dkms(for virtualbox) gnome-do go meld nmap pwgen remmina(with rdp) svn tree vim wget whois xtrlock apt-file at dos2unix
-sudo apt-get install -y clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at dos2unix
 
 #add additonal repos to sourcelists
 echo "deb https://download.01.org/gfx/ubuntu/14.04/main trusty main" | sudo tee /etc/apt/sources.list.d/intellinuxgraphics.list
@@ -24,10 +21,10 @@ wget --no-check-certificate https://download.01.org/gfx/RPM-GPG-KEY-ilg-2 -O- | 
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 
-#update apt cache and install additional software (intel-drivers git virtualbox mongodbshell mysql-client)
+#update apt cache and install additional software
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install git virtualbox-5.0 mongodb-org-shell mysql-community-client fluxgui
+sudo apt-get install git virtualbox-5.0 mongodb-org-shell mysql-community-client fluxgui clusterssh curl dkms gnome-do golang meld nmap pwgen remmina remmina-plugin-rdp subversion tree vim wget whois xtrlock apt-file at dos2unix xxxterm shutter
 
 #manual installs
 install atom <- from site
