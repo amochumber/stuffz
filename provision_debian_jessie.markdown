@@ -16,7 +16,7 @@ Then SSH from a terminal on your host.
 ### Run these commands first to get what we need
 
 ```
-sudo apt-get update && sudo apt-get install ca-certificates unzip
+sudo apt-get update && sudo apt-get install ca-certificates git
 wget -P /tmp/ https://apt.puppetlabs.com/puppetlabs-release-pc1-jessie.deb
 sudo dpkg -i /tmp/puppetlabs-release-pc1-jessie.deb
 sudo apt-get update && sudo apt-get install puppet-agent
@@ -52,7 +52,9 @@ Insert the next section into `/etc/puppetlabs/r10k/r10k.yaml`:
   private_key: '/root/.ssh/id_rsa'
 ```
 
-### Edit `/etc/puppetlabs/puppet/puppet.conf` and add your "environment".
+### Setup your "environment"
+
+Edit `/etc/puppetlabs/puppet/puppet.conf` and add your environment.
 
 For example, if it was my working laptop I would use production and if it is a VM for testing a change then localdev:
 
