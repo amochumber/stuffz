@@ -22,6 +22,10 @@ sudo dpkg -i /tmp/puppetlabs-release-pc1-jessie.deb
 sudo apt-get update && sudo apt-get install puppet-agent
 ```
 
+### Add deploy key
+
+Create an ssh keypair for root and add the public key to the deply keys of github.com:sysadmiral/sysadmiral_puppet
+
 ### Setup R10K
 
 ```
@@ -62,6 +66,6 @@ environment = localdev
 ```
 mypuppetenv=$(grep environment /etc/puppetlabs/puppet/puppet.conf | awk {'print $3'})
 sudo /opt/puppetlabs/puppet/bin/r10k deploy environment $mypuppetenv -v --puppetfile
-sudo /opt/puppetlabs/bin/puppet apply --debug --verbose /etc/puppetlabs/code/environments/$mypuppetenv/site.pp
+sudo /opt/puppetlabs/bin/puppet apply --verbose /etc/puppetlabs/code/environments/$mypuppetenv/site.pp
 unset mypuppetenv
 ```
