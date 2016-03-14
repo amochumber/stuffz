@@ -97,7 +97,7 @@ facterVars
 echo "\nInstalling pre-reqs..."
 apt-get update && apt-get install $preReqPkgs
 wget -P /tmp/ $puppetAptRepo
-dpkg -i /tmp/$puppetRepoDeb
+dpkg -i /tmp/$puppetAptDeb
 apt-get update && apt-get install puppet-agent
 /opt/puppetlabs/puppet/bin/gem install r10k
 mkdir /etc/puppetlabs/r10k
