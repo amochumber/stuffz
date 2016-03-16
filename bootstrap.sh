@@ -19,7 +19,6 @@ fi
 function thereCanBeOnlyOne {
 if [ -e $lockfile ]; then
 	echo "Cannot run more than one instance"
-	cleanup
 	exit 1
 else
 	touch $lockfile
@@ -95,10 +94,10 @@ getEnv
 echo "Setting up new $puppetEnv machine..."
 facterVars
 echo "\nInstalling pre-reqs..."
-apt-get update && apt-get install $preReqPkgs
+apt-get -qq update && apt-get install -y -q $preReqPkgs
 wget -P /tmp/ $puppetAptRepo
 dpkg -i /tmp/$puppetAptDeb
-apt-get update && apt-get install puppet-agent
+apt-get update -qq && apt-get install -y puppet-agent
 /opt/puppetlabs/puppet/bin/gem install r10k
 mkdir /etc/puppetlabs/r10k
 
