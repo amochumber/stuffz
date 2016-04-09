@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # a record of the steps i nearly always run to get a Linux Mint install the way I like.
 
 # TODO - find a way to "boxen" this process.
@@ -14,6 +16,7 @@ wget https://repo.percona.com/apt/percona-release_0.1-3.trusty_all.deb -O /tmp/p
 wget http://dev.mysql.com/get/mysql-apt-config_0.6.0-1_all.deb -O /tmp/mysql.deb && sudo dpkg -i /tmp/mysql.deb
 sudo add-apt-repository ppa:git-core/ppa
 sudo add-apt-repository ppa:kilian/f.lux
+sudo apt-add-repository ppa:remmina-ppa-team/remmina-next
 
 #add required apt-keys
 wget --no-check-certificate https://download.01.org/gfx/RPM-GPG-KEY-ilg -O- | sudo apt-key add -
