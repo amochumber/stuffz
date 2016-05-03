@@ -4,6 +4,14 @@
 # Shell script for bootstrapping a new laptop
 ###
 
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
+
+function ctrl_c() {
+  echo "caught CTRL-C - EXITING!"
+  exit 1
+}
+
 lockfile=/var/lock/sysadmiral.lock
 bootstrapFile=/root/sysadmiral.bootstrap
 myPuppetRepoLocation="https://github.com/sysadmiral/sysadmiral_puppet.git"
