@@ -13,7 +13,7 @@ function ctrl_c() {
 }
 
 lockfile=/var/lock/sysadmiral.lock
-bootstrapFile=/root/sysadmiral.bootstrap
+bootstrapFile=/root/.sysadmiral.bootstrap
 myPuppetRepoLocation="https://github.com/sysadmiral/sysadmiral_puppet.git"
 preReqPkgs="ca-certificates git"
 internetCheckURL="www.google.com" # make this changeable just in case google goes down!
@@ -81,6 +81,7 @@ getVars ()
       fetcher=$(which wget)
       fetcherOpts="-P /tmp/"
       fetcherInternetCheckOpts="-q --spider"
+      preReqPkgs="${preReqPkgs} lsb-release"
       ;;
     centos)
       installer=$(which yum)
@@ -92,6 +93,7 @@ getVars ()
       fetcher=$(which curl)
       fetcherOpts="-o /tmp/${puppetRepoPkg}"
       fetcherInternetCheckOpts="--silent --head"
+      preReqPkgs="${preReqPkgs} redhat-lsb" 
       ;;
     *)
       echo "myostype not found"
