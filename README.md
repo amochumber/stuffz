@@ -1,4 +1,4 @@
 stuffz
 ======
 
-A place to keep quick and dirty bash scripts
+A place to keep things that don't fit into my other repos
