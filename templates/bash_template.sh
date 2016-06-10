@@ -58,8 +58,11 @@ run_command_noexit()
 
 run_command()
 {
-  run_command_noexit "$1" && echo -e "${green}[OK]${reset}" \
-  || exit_on_error "$1"
+  if [[ run_command_noexit "$1" ]]; then
+    echo -e "${green}[OK]${reset}"
+  else
+    exit_on_error "$1"
+  fi 
 }
 
 main()
