@@ -230,9 +230,9 @@ install_pre_reqs
 get_env
 install_puppet
 install_R10K
-post_install
 bootstrap
 youve_been_bootstrapped
+post_bootstrap
 }
 
 main "$@"
