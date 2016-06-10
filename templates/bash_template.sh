@@ -39,9 +39,7 @@ fi
 
 print_status()
 {
-  echo
   echo -e "[INFO] $1"
-  echo
 }
 
 exit_on_error()
