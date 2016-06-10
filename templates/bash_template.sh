@@ -52,13 +52,13 @@ exit_on_error()
 
 run_command_noexit()
 {
-  echo -ne "[INFO] Executing: ${1}..."
+  echo -e "[INFO] Executing: ${1}..."
   bash -c "$1"
 }
 
 run_command()
 {
-  $(run_command_noexit "$1"; echo -e "${green}[OK]${reset}") \
+  run_command_noexit "$1" && echo -e "${green}[OK]${reset}" \
   || exit_on_error "$1"
 }
 
