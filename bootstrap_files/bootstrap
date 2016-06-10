@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+#
+###
+# Shell script for bootstrapping a new laptop
+# This script is intended to setup a puppet managed machine - it  pulls in and launches a puppet repo
+###
+
+# exit on commands that error, unset variables, commands in pipe chains that
+# fail
+set -euo pipefail
+
+# trap ctrl-c and call ctrl_c()
+ctrl_c()
+{
+  echo -e "\n\e[1;31mcaught CTRL-C - EXITING!\e[0m"
+  exit 1
+}
+
+trap ctrl_c SIGINT
+
+# set some colours for use in the script
+if tput setaf 1 &> /dev/null; then
+  tput sgr0;
+  bold=$(tput bold);
+  reset=$(tput sgr0);
+  red=$(tput setaf 160);
+  green=$(tput setaf 64);
+else
+  bold='';
+  reset="\e[0m";
+  red="\e[1;31m";
+  green="\e[1;32m";
+fi
+
+# add some outputting functions to print status, show errors, draw attention to
+# output and exit on errors
+# TODO: use the centos/debian logging functions libraries:-
+# /lib/lsb/init-functions or /etc/init.d/functions
+
+print_status()
+{
+  echo
+  echo -e "[INFO] $1"
+  echo
+}
+
+exit_on_error()
+{
+  echo -e "${red}${bold}[ERROR] ${reset} $1" 1>&2
+  exit 1
+}
+
+run_command_noexit()
+{
+  echo -e "[INFO] Executing: ${1}..."
+  bash -c "$1"
+}
+
+run_command()
+{
+  if run_command_noexit "$1"; then
+    echo -e "${green}[OK]${reset}"
+  else
+    exit_on_error "$1"
+  fi
+}
+
+lockfile="/var/lock/sysadmiral-bootstrap.lock"
+bootstrap_file="/var/log/sysadmiral-bootstrap.log"
+remote_git_dir="https://raw.githubusercontent.com/sysadmiral/sysadmiral-puppet-control/production/bootstrap/"
+my_puppet_conf_location="${remote_git_dir}puppet.conf"
+my_r10k_yaml_location="${remote_git_dir}r10k.yaml"
+pre_req_pkgs="ca-certificates git"
+internet_check_URL="www.google.com" # make this changeable just in case google goes down!
+
+del_lockfile()
+{
+  if [[ -f ${lockfile} ]]; then
+    rm -f ${lockfile}
+  fi
+}
+
+exit_with_cleanup()
+{
+  del_lockfile
+  exit_on_error "$1"
+}
+
+there_can_be_only_one()
+{
+  if [[ -f ${lockfile} ]]; then
+    exit_on_error "Cannot run more than one instance"
+  else
+    touch ${lockfile}
+  fi
+}
+
+are_we_root()
+{
+  if [[ ${EUID} != "0" ]]; then
+    exit_with_cleanup "This script must be run as root"
+  fi
+}
+
+are_we_bootstrapped()
+{
+  if [[ -f ${bootstrap_file} ]]; then
+    exit_with_cleanup "This machine has already been bootstrapped the \
+    sysadmiral way. Exiting."
+  fi
+}
+
+get_vars()
+{
+  if [[ -f /etc/os-release ]]; then
+    my_os_type=$(sed -n -e 's/^ID=//p' /etc/os-release | sed -e 's/\"//g')
+  elif [[ -f  /etc/centos-release ]]; then
+    my_os_type=centos
+  elif [[ -f /etc/debian_version ]]; then
+    my_os_type=debian
+  else
+    exit_with_cleanup "Unable to determine OS. This script has been tested with \
+    debian jessie and centos 7 only."
+  fi
+
+  case $my_os_type in
+    debian)
+      installer=$(which apt-get)
+      installer_opts="install -qq"
+      pkg_installer=$(which dpkg)
+      pkg_installer_opts="-i"
+      puppet_repo="https://apt.puppetlabs.com/"
+      puppet_repo_pkg="puppetlabs-release-pc1-jessie.deb"
+      fetcher=$(which wget)
+      fetcher_opts="-O -"
+      fetcher_internet_check_opts="-q --spider"
+      pre_req_pkgs="${pre_req_pkgs} lsb-release"
+      ;;
+    centos)
+      installer=$(which yum)
+      installer_opts="install -q -y"
+      pkg_installer=${installer}
+      pkg_installer_opts="install -y"
+      puppet_repo="https://yum.puppetlabs.com/"
+      puppet_repo_pkg="puppetlabs-release-pc1-el-7.noarch.rpm"
+      fetcher=$(which curl)
+      fetcher_opts=""
+      fetcher_internet_check_opts="--silent --head"
+      pre_req_pkgs="${pre_req_pkgs} redhat-lsb"
+      ;;
+    *)
+      exit_with_cleanup "my_os_type not found"
+      ;;
+  esac
+}
+
+internet_check()
+{
+  internet_check_command="${fetcher} ${fetcher_internet_check_opts} ${internet_check_URL}"
+  print_status "Checking we are online..."
+  ${internet_check_command} 1> /dev/null
+  if [[ $? == 0 ]]; then
+    print_status "We are online! \o/";
+  else
+    exit_with_cleanup "Get some internet all up in here!";
+  fi
+}
+
+install_pre_reqs()
+{
+  print_status "Installing required packages. Please wait..."
+  "${installer} ${installer_opts} ${pre_req_pkgs}"
+  print_status "Required packages installed"
+}
+
+get_env()
+{
+  echo
+  echo -e "${green}What Puppet environment will this machine use?${reset}"
+  read -t 30 -r puppet_env
+  echo
+}
+
+install_puppet()
+{
+  print_status "Installing puppet repo and puppet-agent"
+  ${fetcher} ${fetcher_opts} ${puppet_repo}${puppet_repo_pkg} > /tmp/${puppet_repo_pkg}
+  "${pkg_installer} ${pkg_installer_opts} /tmp/${puppet_repo_pkg}"
+  ${installer} update -y && ${installer} install -y puppet-agent
+  ${fetcher} ${fetcher_opts} ${my_puppet_conf_location} > /etc/puppetlabs/puppet/puppet.conf
+  print_status "puppet-agent is installed"
+  puppet_bin_dir="/opt/puppetlabs/puppet/bin/"
+}
+
+install_R10K()
+{
+  print_status "Installing r10k"
+  ${puppet_bin_dir}gem install --no-rdoc --no-ri r10k
+  mkdir /etc/puppetlabs/r10k
+  ${fetcher} ${fetcher_opts} ${my_r10k_yaml_location} > /etc/puppetlabs/r10k/r10k.yaml
+  print_status "r10k installed and config file created"
+}
+
+post_bootstrap()
+{
+true
+}
+
+bootstrap()
+{
+  run_command "${puppet_bin_dir}r10k deploy environment ${puppet_env} -vp"
+  run_command "${puppet_bin_dir}puppet apply --verbose \
+  --hiera_config=/etc/puppetlabs/code/environments/${puppet_env}/hiera.yaml \
+  /etc/puppetlabs/code/environments/${puppet_env}/site.pp"
+}
+
+youve_been_bootstrapped()
+{
+  echo "This file stops the sysadmiral bootstrap from being run more \
+  times than the initial run which may have \
+  undesirable effects" > ${bootstrap_file}
+}
+
+main()
+{
+there_can_be_only_one
+are_we_root
+are_we_bootstrapped
+get_vars
+internet_check
+install_pre_reqs
+get_env
+install_puppet
+install_R10K
+post_install
+bootstrap
+youve_been_bootstrapped
+}
+
+main "$@"

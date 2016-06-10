@@ -1,0 +1,9 @@
+:cachedir: '/opt/puppetlabs/r10k/cache'
+
+:sources:
+  :sysadmiral:
+    remote: 'https://github.com/sysadmiral/sysadmiral-puppet-control.git'
+    basedir: '/etc/puppetlabs/code/environments'
+
+:git:
+  provider: 'shellgit'
