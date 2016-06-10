@@ -176,10 +176,11 @@ install_pre_reqs()
 
 get_env()
 {
-  echo
   echo -e "${green}What Puppet environment will this machine use?${reset}"
   read -t 30 -r puppet_env
-  echo
+  if [[ -z $puppet_env ]]; then
+    exit_with_cleanup "No environment specified"
+  fi
 }
 
 install_puppet()
@@ -189,6 +190,7 @@ install_puppet()
   ${pkg_installer} ${pkg_installer_opts} /tmp/${puppet_repo_pkg}
   ${installer} update -y && ${installer} install -y puppet-agent
   ${fetcher} ${fetcher_opts} ${my_puppet_conf_location} > /etc/puppetlabs/puppet/puppet.conf
+  sed -i -e "s/@@puppet_env/${puppet_env}/" /etc/puppetlabs/puppet/puppet.conf
   print_status "puppet-agent is installed"
   puppet_bin_dir="/opt/puppetlabs/puppet/bin/"
 }
