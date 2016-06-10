@@ -67,7 +67,7 @@ run_command()
 
 lockfile="/var/lock/sysadmiral-bootstrap.lock"
 bootstrap_file="/var/log/sysadmiral-bootstrap.log"
-remote_git_dir="https://raw.githubusercontent.com/sysadmiral/sysadmiral-puppet-control/production/bootstrap/"
+remote_git_dir="https://raw.githubusercontent.com/sysadmiral/sysadmiral-puppet-control/production/bootstrap_files/"
 my_puppet_conf_location="${remote_git_dir}puppet.conf"
 my_r10k_yaml_location="${remote_git_dir}r10k.yaml"
 pre_req_pkgs="ca-certificates git"
@@ -120,7 +120,7 @@ get_vars()
     my_os_type=debian
   else
     exit_with_cleanup "Unable to determine OS. This script has been tested with \
-    debian jessie and centos 7 only."
+    debian jessie and centos 6/7 only."
   fi
 
   case $my_os_type in
@@ -137,19 +137,20 @@ get_vars()
       pre_req_pkgs="${pre_req_pkgs} lsb-release"
       ;;
     centos)
+      major_os_version=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release))
       installer=$(which yum)
       installer_opts="install -q -y"
       pkg_installer=${installer}
       pkg_installer_opts="install -y"
       puppet_repo="https://yum.puppetlabs.com/"
-      puppet_repo_pkg="puppetlabs-release-pc1-el-7.noarch.rpm"
+      puppet_repo_pkg="puppetlabs-release-pc1-el-${major_os_version}.noarch.rpm"
       fetcher=$(which curl)
       fetcher_opts=""
       fetcher_internet_check_opts="--silent --head"
       pre_req_pkgs="${pre_req_pkgs} redhat-lsb"
       ;;
     *)
-      exit_with_cleanup "my_os_type not found"
+      exit_with_cleanup "os type not supported by this script"
       ;;
   esac
 }
@@ -169,7 +170,7 @@ internet_check()
 install_pre_reqs()
 {
   print_status "Installing required packages. Please wait..."
-  "${installer} ${installer_opts} ${pre_req_pkgs}"
+  ${installer} ${installer_opts} ${pre_req_pkgs}
   print_status "Required packages installed"
 }
 
@@ -185,7 +186,7 @@ install_puppet()
 {
   print_status "Installing puppet repo and puppet-agent"
   ${fetcher} ${fetcher_opts} ${puppet_repo}${puppet_repo_pkg} > /tmp/${puppet_repo_pkg}
-  "${pkg_installer} ${pkg_installer_opts} /tmp/${puppet_repo_pkg}"
+  ${pkg_installer} ${pkg_installer_opts} /tmp/${puppet_repo_pkg}
   ${installer} update -y && ${installer} install -y puppet-agent
   ${fetcher} ${fetcher_opts} ${my_puppet_conf_location} > /etc/puppetlabs/puppet/puppet.conf
   print_status "puppet-agent is installed"
