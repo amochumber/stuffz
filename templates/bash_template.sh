@@ -62,7 +62,7 @@ run_command()
     echo -e "${green}[OK]${reset}"
   else
     exit_on_error "$1"
-  fi 
+  fi
 }
 
 main()
