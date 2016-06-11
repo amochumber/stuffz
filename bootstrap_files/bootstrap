@@ -65,7 +65,7 @@ run_command()
 
 lockfile="/var/lock/sysadmiral-bootstrap.lock"
 bootstrap_file="/var/log/sysadmiral-bootstrap.log"
-remote_git_dir="https://raw.githubusercontent.com/sysadmiral/sysadmiral-puppet-control/production/bootstrap_files/"
+remote_git_dir="https://raw.githubusercontent.com/sysadmiral/sysadmiral-miscellaneous/master/bootstrap_files/"
 my_puppet_conf_location="${remote_git_dir}puppet.conf"
 my_r10k_yaml_location="${remote_git_dir}r10k.yaml"
 pre_req_pkgs="ca-certificates git"
