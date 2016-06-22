@@ -118,7 +118,7 @@ get_vars()
     my_os_type=debian
   else
     exit_with_cleanup "Unable to determine OS. This script has been tested with \
-    debian jessie and centos 6/7 only."
+    {debian 8|centos 6|centos 7|fedora 23} only."
   fi
 
   case $my_os_type in
@@ -134,14 +134,23 @@ get_vars()
       fetcher_internet_check_opts="-q --spider"
       pre_req_pkgs="${pre_req_pkgs} lsb-release"
       ;;
-    centos)
+    centos|fedora)
       major_os_version=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release))
-      installer=$(which yum)
+      case $my_os_type in
+        centos)
+          installer=$(which yum)
+          distro="el"
+          ;;
+        fedora)
+          installer=$(which dnf)
+          distro="fedora"
+          ;;
+      esac
       installer_opts="install -q -y"
       pkg_installer=${installer}
       pkg_installer_opts="install -y"
       puppet_repo="https://yum.puppetlabs.com/"
-      puppet_repo_pkg="puppetlabs-release-pc1-el-${major_os_version}.noarch.rpm"
+      puppet_repo_pkg="puppetlabs-release-pc1-${distro}-${major_os_version}.noarch.rpm"
       fetcher=$(which curl)
       fetcher_opts=""
       fetcher_internet_check_opts="--silent --head"
